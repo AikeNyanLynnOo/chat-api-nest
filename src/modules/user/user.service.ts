@@ -1,5 +1,4 @@
 import {
-  HttpStatus,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -11,7 +10,6 @@ import { Repository } from 'typeorm';
 // import { CreateUserDto } from './dtos/create-user.dto';
 import { CreateUserDto, UpdateUserDto, UserDto } from './dtos';
 import { removeSensitiveDataUser } from 'src/utils/helpers/remove-sensitive-data-users';
-import { UserDeleteResponse } from 'src/types/user-delete-response.type';
 
 @Injectable()
 export class UserService {
@@ -65,7 +63,8 @@ export class UserService {
       });
       if (!user) {
         this.logger.warn(`User with email "${email}" not found`);
-        throw new NotFoundException(`User with email "${email}" not found`);
+        // throw new NotFoundException(`User with email "${email}" not found`);
+        return null;
       }
       return removeSensitiveDataUser(user);
     } catch (error) {
@@ -129,10 +128,9 @@ export class UserService {
       await this.userRepository.delete({ id: user.id });
 
       return {
-        status: HttpStatus.OK,
         message: 'Successfully deleted.',
         data: removeSensitiveDataUser(user),
-      } as UserDeleteResponse;
+      };
     } catch (error) {
       this.logger.error(`Failed to remove user: ${error.message}`, error.stack);
 

@@ -12,7 +12,7 @@ import {
   ContainsUppercase,
 } from 'src/utils/decorators/password-validation.decorator';
 
-export class CreateUserClientDto {
+export class SignUpDto {
   @ApiProperty({
     required: true,
     description: 'The first name of the user',
@@ -44,7 +44,7 @@ export class CreateUserClientDto {
   @ApiProperty({
     required: true,
     description: 'The password of the user',
-    example: '12345678',
+    example: 'Abc1234!',
   })
   @IsNotEmpty()
   @IsString()
