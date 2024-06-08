@@ -7,10 +7,8 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities';
 import { Repository } from 'typeorm';
-// import { CreateUserDto } from './dtos/create-user.dto';
-import { CreateUserDto, UpdateUserDto, UserDto } from './dtos';
+import { CreateUserDto, UpdateUserDto, PureUserDto } from './dtos';
 import { removeSensitiveDataUser } from 'src/utils/helpers/remove-sensitive-data-users';
-
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
@@ -21,7 +19,7 @@ export class UserService {
   ) {}
 
   // GET ALL USERS
-  async findAll(): Promise<UserDto[]> {
+  async findAll(): Promise<PureUserDto[]> {
     try {
       const users = await this.userRepository.find();
       return users.map((user) => removeSensitiveDataUser(user));
@@ -35,7 +33,7 @@ export class UserService {
   }
 
   // FIND USER BY ID
-  async findOne(userId: string): Promise<UserDto> {
+  async findOne(userId: string): Promise<PureUserDto> {
     try {
       const user = await this.userRepository.findOne({
         where: {
@@ -54,7 +52,7 @@ export class UserService {
   }
 
   // FIND USER BY EMAIL
-  async findUserByEmail(email: string): Promise<UserDto> {
+  async findUserByEmail(email: string): Promise<User> {
     try {
       const user = await this.userRepository.findOne({
         where: {
@@ -66,7 +64,8 @@ export class UserService {
         // throw new NotFoundException(`User with email "${email}" not found`);
         return null;
       }
-      return removeSensitiveDataUser(user);
+      // return includeCredentials ? user : removeSensitiveDataUser(user);
+      return user;
     } catch (error) {
       this.logger.error(`Failed to find user: ${error.message}`, error.stack);
       throw new InternalServerErrorException(
@@ -91,7 +90,10 @@ export class UserService {
   }
 
   // UPDATE USER
-  async update(userId: string, updateUserDto: UpdateUserDto): Promise<UserDto> {
+  async update(
+    userId: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<PureUserDto> {
     try {
       const user = await this.findOne(userId);
       if (!user) {

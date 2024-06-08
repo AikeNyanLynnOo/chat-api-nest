@@ -12,7 +12,7 @@ import {
 import { UserService } from './user.service';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { User } from './entities';
-import { CreateUserDto, UpdateUserDto, UserDto } from './dtos';
+import { CreateUserDto, UpdateUserDto, UserDto, PureUserDto } from './dtos';
 
 @Controller('users')
 export class UserController {
@@ -30,7 +30,7 @@ export class UserController {
     status: HttpStatus.NOT_FOUND,
     description: 'Failed to retrieve users',
   })
-  async findAll(): Promise<UserDto[]> {
+  async findAll(): Promise<PureUserDto[]> {
     return await this.userService.findAll();
   }
 
@@ -48,7 +48,7 @@ export class UserController {
     status: HttpStatus.NOT_FOUND,
     description: 'Failed to find user with ID $userId',
   })
-  async findOne(@Param('id') id: string): Promise<UserDto> {
+  async findOne(@Param('id') id: string): Promise<PureUserDto> {
     return await this.userService.findOne(id);
   }
 
@@ -103,7 +103,7 @@ export class UserController {
   async update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
-  ): Promise<UserDto> {
+  ): Promise<PureUserDto> {
     return await this.userService.update(id, updateUserDto);
   }
 
