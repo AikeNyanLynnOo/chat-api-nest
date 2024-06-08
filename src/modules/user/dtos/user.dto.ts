@@ -24,24 +24,4 @@ export class UserDto {
     example: 'name@domain.com',
   })
   email: string;
-
-  @ApiProperty({
-    description: 'The hashed password of the user',
-  })
-  hashedPassword: string;
-
-  @ApiProperty({
-    description: 'The refresh token of the user',
-  })
-  refreshToken: string;
-
-  @ApiProperty({
-    description: 'The created timestamp of user',
-  })
-  createdAt: string;
-
-  @ApiProperty({
-    description: 'The updated timestamp of user',
-  })
-  updatedAt: string;
 }
