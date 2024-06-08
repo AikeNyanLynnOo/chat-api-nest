@@ -1,12 +1,13 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { SignUpDto } from './dtos/signup.dto';
 import { randomBytes, scrypt, timingSafeEqual } from 'crypto';
 import { promisify } from 'util';
 import { SignInDto } from './dtos/signin.dto';
 import { removeSensitiveDataUser } from 'src/utils/helpers/remove-sensitive-data-users';
+import { User } from '../user/entities';
 
 const scryptPromise = promisify(scrypt);
 
@@ -151,6 +152,35 @@ export class AuthService {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         message: 'An error occured during sign-up. Please try again later.',
+      });
+    }
+  }
+
+  // POST SIGN OUT
+  async signOut(user: Partial<User>, req: Request, res: Response) {
+    console.log('User ID>>>>>', user.id);
+
+    if (!user || !user.id) {
+      this.logger.warn(`User ID is not provided`);
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        status: HttpStatus.BAD_REQUEST,
+        message: 'User ID is not provided',
+      });
+    }
+
+    try {
+      await this.userService.update(user.id, { refreshToken: null });
+      res.clearCookie(process.env.ACCESS_TOKEN_NAME);
+      res.clearCookie(process.env.REFRESH_TOKEN_NAME);
+      return res.status(HttpStatus.OK).json({
+        status: HttpStatus.OK,
+        message: 'User is signed out successfully.',
+      });
+    } catch (error) {
+      this.logger.error('An error occurred during sign-out.', error);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: 'An error occurred during sign-out. Please try again later.',
       });
     }
   }

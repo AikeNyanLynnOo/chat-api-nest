@@ -1,9 +1,20 @@
-import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SignUpDto } from './dtos/signup.dto';
 import { AuthService } from './auth.service';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { SignInDto } from './dtos/signin.dto';
+import { JwtAuthGuard } from 'src/utils/guards/jwt-auth.guard';
+import { CurrentUser } from 'src/utils/decorators/current-user.decorator';
+import { User } from '../user/entities';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -43,5 +54,25 @@ export class AuthController {
   })
   async signIn(@Body() signInDto: SignInDto, @Res() res: Response) {
     return await this.authService.signIn(signInDto, res);
+  }
+
+  // sign out
+  @Post('sign-out')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'User Sign Out' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User successfully signed out. Tokens removed',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Sign out failed',
+  })
+  async signOut(
+    @CurrentUser() user: Partial<User>,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    return await this.authService.signOut(user, req, res);
   }
 }
