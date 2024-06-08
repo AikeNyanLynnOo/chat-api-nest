@@ -63,12 +63,12 @@ export class AuthService {
 
       //   res.cookie(process.env.ACCESS_TOKEN_NAME, accessToken, {
       //     httpOnly: true,
-      //     maxAge: 20 * 60 * 1000,
+      //     maxAge: 20 * 60 * 1000, // 20m
       //   });
 
       //   res.cookie(process.env.REFRESH_TOKEN_NAME, refreshToken, {
       //     httpOnly: true,
-      //     maxAge: 24 * 60 * 60 * 1000,
+      //     maxAge: 24 * 60 * 60 * 1000, // 1d
       //   });
 
       return res.status(HttpStatus.CREATED).json({
@@ -158,8 +158,6 @@ export class AuthService {
 
   // POST SIGN OUT
   async signOut(user: Partial<User>, req: Request, res: Response) {
-    console.log('User ID>>>>>', user.id);
-
     if (!user || !user.id) {
       this.logger.warn(`User ID is not provided`);
       return res.status(HttpStatus.BAD_REQUEST).json({
@@ -181,6 +179,63 @@ export class AuthService {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         message: 'An error occurred during sign-out. Please try again later.',
+      });
+    }
+  }
+
+  // POST REFRESH ACCESS TOKEN
+  async refreshAccessToken(req: Request, res: Response) {
+    const token = req.cookies[process.env.REFRESH_TOKEN_NAME];
+    if (!token) {
+      this.logger.warn(`Refresh token is not provided`);
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        status: HttpStatus.BAD_REQUEST,
+        message: 'Refresh token is not provided',
+      });
+    }
+    try {
+      const { id, email } = this.jwtService.verify(token, {
+        secret: process.env.REFRESH_TOKEN_SECRET,
+      });
+
+      const user = await this.userService.findUserByEmail(email);
+
+      if (!user || user.refreshToken !== token) {
+        this.logger.warn(
+          `Refresh token is invalid or cannot find user with provided refresh token`,
+        );
+        return res.status(HttpStatus.UNAUTHORIZED).json({
+          status: HttpStatus.UNAUTHORIZED,
+          message: 'Unauthorized! Refresh token is invalid.',
+        });
+      }
+
+      const accessToken = this.generateAccessToken({ id, email });
+      const refreshToken = this.generateRefreshToken({ id, email });
+
+      await this.userService.update(user.id, { refreshToken });
+
+      res.cookie(process.env.ACCESS_TOKEN_NAME, accessToken, {
+        httpOnly: true,
+        maxAge: 20 * 60 * 1000, // 20m
+      });
+      res.cookie(process.env.REFRESH_TOKEN_NAME, refreshToken, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000, // 1d
+      });
+
+      return res.status(HttpStatus.OK).json({
+        status: HttpStatus.OK,
+        message: 'New access token is generated successfully',
+        data: {
+          accessToken,
+        },
+      });
+    } catch (error) {
+      this.logger.error('An error occurred during token refresh.', error);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        message: 'Failed to refresh access token. Please try again later.',
       });
     }
   }

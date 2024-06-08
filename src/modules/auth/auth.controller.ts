@@ -75,4 +75,20 @@ export class AuthController {
   ) {
     return await this.authService.signOut(user, req, res);
   }
+
+  // refresh access token
+  @Post('refresh-token')
+  @ApiOperation({ summary: 'Refreshing Access Token' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Access token successfully refreshed.',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description:
+      'Invalid or expired refresh token. Please sign in first to get refresh token',
+  })
+  async refreshAccessToken(@Req() req: Request, @Res() res: Response) {
+    return await this.authService.refreshAccessToken(req, res);
+  }
 }
