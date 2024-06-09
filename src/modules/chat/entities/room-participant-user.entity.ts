@@ -2,9 +2,9 @@ import { BaseEntity } from 'src/utils/entities/base.entity';
 import { Column, Entity } from 'typeorm';
 
 @Entity({
-  name: 'roomParticipant',
+  name: 'roomParticipantUser',
 })
-export class RoomParticipant extends BaseEntity {
+export class RoomParticipantUser extends BaseEntity {
   @Column()
   userId: string;
 
