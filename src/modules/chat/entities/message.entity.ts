@@ -1,6 +1,7 @@
 import { User } from 'src/modules/user/entities';
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Room } from './room.entity';
+import { BaseEntity } from 'src/utils/entities/base.entity';
 
 @Entity({
   name: 'message',
