@@ -113,6 +113,6 @@ export class RoomParticipantUser1717744764543 implements MigrationInterface {
     }
 
     // drop table
-    await queryRunner.dropTable('roomParticipantsUser', true);
+    await queryRunner.dropTable('roomParticipantUser', true);
   }
 }
