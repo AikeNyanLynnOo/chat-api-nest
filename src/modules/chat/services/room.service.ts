@@ -6,7 +6,6 @@ import { MessageService } from './message.service';
 import { AssignUsersDto, CreateRoomDto, PureRoomInfoDto } from '../dtos';
 import { WsException } from '@nestjs/websockets';
 import { removeSensitiveDataUser } from 'src/utils/helpers/remove-sensitive-data-users';
-import { ResultCount } from 'src/types/result-count.type';
 import { UpdateRoomDto } from '../dtos/update-room.dto';
 
 export class RoomService {
@@ -49,22 +48,21 @@ export class RoomService {
   }
 
   // Get all rooms
-  async findAll(): Promise<ResultCount<PureRoomInfoDto>> {
+  async findAll() {
     try {
       const [result, total] = await this.roomRepository.findAndCount({
         relations: ['participants'],
       });
-      const pureRoomInfo = result.map((room) => {
-        const { participants } = room;
-        return {
-          ...room,
-          participants: participants.map((participant) =>
-            removeSensitiveDataUser(participant),
-          ),
-        };
-      });
       this.logger.log('All rooms retrieved successfully');
-      return { result: pureRoomInfo, total };
+      return {
+        result: result.map((result) => ({
+          ...result,
+          participants: result.participants.map((p) =>
+            removeSensitiveDataUser(p),
+          ),
+        })),
+        total,
+      };
     } catch (error) {
       this.logger.error(
         `Failed to find all rooms: ${error.message}`,
@@ -80,7 +78,7 @@ export class RoomService {
     try {
       const room = await this.roomRepository.findOne({
         where: { id },
-        relations: ['participants', 'participants.connectedUsers', 'messages'],
+        relations: ['participants', 'messages'],
       });
 
       if (!room) {
@@ -199,7 +197,7 @@ export class RoomService {
 
   // Delete room
   // Only created user can delete the room
-  async deleteRoom(roomId: string, userId: string): Promise<void> {
+  async deleteRoom(userId: string, roomId: string): Promise<void> {
     try {
       await this.checkIfCreatedByUser(roomId, userId);
       await this.dataSource.transaction(async (transactionalEntityManager) => {

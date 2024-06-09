@@ -6,8 +6,8 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import { PureUserDto } from 'src/modules/user/dtos';
-import { MessageDto } from './message.dto';
+import { User } from 'src/modules/user/entities';
+import { Message } from '../entities';
 
 export class PureRoomInfoDto {
   @ApiProperty({ required: true, example: 'XXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX' })
@@ -27,11 +27,11 @@ export class PureRoomInfoDto {
 
   @ApiProperty()
   @IsArray()
-  participants: PureUserDto[];
+  participants: Partial<User>[];
 
   @ApiProperty()
   @IsArray()
-  messages: MessageDto[];
+  messages: Message[];
 
   @ApiProperty({ example: 'XXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX' })
   createdBy: string;

@@ -13,7 +13,7 @@ import {
 import { UserService } from './user.service';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { User } from './entities';
-import { CreateUserDto, UpdateUserDto, UserDto, PureUserDto } from './dtos';
+import { CreateUserDto, UpdateUserDto, UserDto } from './dtos';
 import { JwtAuthGuard } from 'src/utils/guards/jwt-auth.guard';
 
 @Controller('users')
@@ -33,7 +33,7 @@ export class UserController {
     status: HttpStatus.NOT_FOUND,
     description: 'Failed to retrieve users',
   })
-  async findAll(): Promise<PureUserDto[]> {
+  async findAll(): Promise<Partial<User>[]> {
     return await this.userService.findAll();
   }
 
@@ -51,7 +51,7 @@ export class UserController {
     status: HttpStatus.NOT_FOUND,
     description: 'Failed to find user with ID $userId',
   })
-  async findOne(@Param('id') id: string): Promise<PureUserDto> {
+  async findOne(@Param('id') id: string): Promise<Partial<User>> {
     return await this.userService.findOne(id);
   }
 
@@ -106,7 +106,7 @@ export class UserController {
   async update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
-  ): Promise<PureUserDto> {
+  ): Promise<Partial<User>> {
     return await this.userService.update(id, updateUserDto);
   }
 

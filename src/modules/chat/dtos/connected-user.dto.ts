@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
-import { PureUserDto } from 'src/modules/user/dtos';
+import { User } from 'src/modules/user/entities';
 export class ConnectedUserDto {
   @ApiProperty({ example: 'XXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX' })
   @IsUUID()
@@ -19,8 +19,8 @@ export class ConnectedUserDto {
   @IsNotEmpty()
   socketId: string;
 
-  @ApiProperty({ type: PureUserDto })
-  user: PureUserDto;
+  @ApiProperty()
+  user: Partial<User>;
 
   @ApiProperty({ example: '2023-01-01T00:00:00.000Z' })
   createdAt: Date;

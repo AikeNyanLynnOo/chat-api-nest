@@ -7,3 +7,4 @@ export { CreateRoomDto } from './create-room.dto';
 export { AssignUsersDto } from './assign-user.dto';
 export { PureRoomInfoDto } from './pure-room-info.dto';
 export { UpdateUserDto } from 'src/modules/user/dtos';
+export { RoomIdDto } from './room-id.dto';

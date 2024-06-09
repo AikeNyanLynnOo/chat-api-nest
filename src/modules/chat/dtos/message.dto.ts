@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
-import { PureUserDto } from 'src/modules/user/dtos';
+import { User } from 'src/modules/user/entities';
 
 export class MessageDto {
   @ApiProperty({ required: true, example: 'XXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX' })
@@ -19,8 +19,8 @@ export class MessageDto {
   @IsNotEmpty()
   roomId: string;
 
-  @ApiProperty({ type: PureUserDto })
-  user: PureUserDto;
+  @ApiProperty()
+  user: Partial<User>;
 
   @ApiProperty({ example: 'XXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX' })
   createdBy: string;

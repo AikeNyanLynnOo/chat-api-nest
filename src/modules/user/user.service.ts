@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities';
 import { Repository } from 'typeorm';
-import { CreateUserDto, UpdateUserDto, PureUserDto } from './dtos';
+import { CreateUserDto, UpdateUserDto } from './dtos';
 import { removeSensitiveDataUser } from 'src/utils/helpers/remove-sensitive-data-users';
 @Injectable()
 export class UserService {
@@ -19,7 +19,7 @@ export class UserService {
   ) {}
 
   // GET ALL USERS
-  async findAll(): Promise<PureUserDto[]> {
+  async findAll(): Promise<Partial<User>[]> {
     try {
       const users = await this.userRepository.find();
       return users.map((user) => removeSensitiveDataUser(user));
@@ -33,7 +33,7 @@ export class UserService {
   }
 
   // FIND USER BY ID
-  async findOne(userId: string): Promise<PureUserDto> {
+  async findOne(userId: string): Promise<Partial<User>> {
     try {
       const user = await this.userRepository.findOne({
         where: {
@@ -93,7 +93,7 @@ export class UserService {
   async update(
     userId: string,
     updateUserDto: UpdateUserDto,
-  ): Promise<PureUserDto> {
+  ): Promise<Partial<User>> {
     try {
       const user = await this.findOne(userId);
       if (!user) {

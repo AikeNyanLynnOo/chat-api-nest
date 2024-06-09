@@ -250,7 +250,7 @@ export class AuthService {
     const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
     const accessToken = this.jwtService.sign(
       { id, email },
-      { secret: ACCESS_TOKEN_SECRET, expiresIn: '20m' },
+      { secret: ACCESS_TOKEN_SECRET, expiresIn: '60m' },
     );
     return accessToken;
   }

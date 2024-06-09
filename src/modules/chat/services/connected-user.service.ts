@@ -37,6 +37,25 @@ export class ConnectedUserService {
     }
   }
 
+  // Get connected users with userId
+  async getByUserId(userId: string): Promise<ResultCount<ConnectedUserDto>> {
+    try {
+      const [result, total] = await this.connectedUserRepository.findAndCount({
+        where: { userId },
+      });
+
+      return { result, total };
+    } catch (exception) {
+      this.logger.error(
+        `Failed to get connected users with user ID - ${userId}`,
+        exception.stack,
+      );
+      throw new WsException(
+        `Error retrieving connected users from  database with User ID - ${userId}`,
+      );
+    }
+  }
+
   // Create connected user (when socket establish)
   async create(userId: string, socketId: string): Promise<ConnectedUser> {
     try {
