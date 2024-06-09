@@ -10,7 +10,7 @@ export class DeleteMessageDto {
 
   @ApiProperty({ required: true, isArray: true })
   @IsArray()
-  @IsUUID(4, { each: true }) // UUID version used here is 4
+  @IsUUID(4, { each: true, message: 'Each message id must be a valid UUID' }) // UUID version used here is 4
   @IsNotEmpty()
   messageIds: string[];
 }

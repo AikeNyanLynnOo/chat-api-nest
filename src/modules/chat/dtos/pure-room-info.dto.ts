@@ -1,26 +1,37 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 import { PureUserDto } from 'src/modules/user/dtos';
+import { MessageDto } from './message.dto';
 
-export class MessageDto {
+export class PureRoomInfoDto {
   @ApiProperty({ required: true, example: 'XXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX' })
   @IsUUID()
   @IsString()
   @IsNotEmpty()
   id: string;
 
-  @ApiProperty({ required: true, example: 'Hello' })
+  @ApiProperty({ required: true })
   @IsString()
-  @IsNotEmpty()
-  text: string;
+  @IsOptional()
+  name: string;
 
-  @ApiProperty({ required: true, example: 'XXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX' })
-  @IsString()
+  @ApiProperty({ required: true })
   @IsNotEmpty()
-  roomId: string;
+  type: string;
 
-  @ApiProperty({ type: PureUserDto })
-  user: PureUserDto;
+  @ApiProperty()
+  @IsArray()
+  participants: PureUserDto[];
+
+  @ApiProperty()
+  @IsArray()
+  messages: MessageDto[];
 
   @ApiProperty({ example: 'XXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX' })
   createdBy: string;
