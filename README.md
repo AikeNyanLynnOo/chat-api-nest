@@ -91,6 +91,26 @@ REGION -> AWS Region
 
 So that we can do additional configurations on AWS. Docker image is on AWS now.
 
+
+## HTTP routes
+
+### Auth routes
+
+(POST) Sign Up
+`{{base_url}}/auth/sign-up`
+
+(POST) Sign In
+`{{base_url}}/auth/sign-in`
+
+(POST) Sign Out
+Authorization : Bear{SPACE}JWT
+`{{base_url}}/auth/sign-out`
+
+(POST) Refresh Token
+Authorization : Bear{SPACE}JWT
+`{{base_url}}/auth/refresh-token`
+
+
 ## WebSocket Message Events
 
 | Message Event      | Emit Type            | Notification Scope      |
