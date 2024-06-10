@@ -12,6 +12,7 @@
 - Chat Direct/Group feature ✅
 - Full user authentication feature SignUp, SignIn, SignOut ✅
 - Access token, Refresh token ✅
+- Containerization with Docker, define infra with terraform ✅
 
 ## To improve
 
