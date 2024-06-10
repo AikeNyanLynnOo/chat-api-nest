@@ -63,7 +63,7 @@ export class AuthService {
 
       //   res.cookie(process.env.ACCESS_TOKEN_NAME, accessToken, {
       //     httpOnly: true,
-      //     maxAge: 20 * 60 * 1000, // 20m
+      //     maxAge: 60 * 60 * 1000, // 60m
       //   });
 
       //   res.cookie(process.env.REFRESH_TOKEN_NAME, refreshToken, {
@@ -129,7 +129,7 @@ export class AuthService {
 
       res.cookie(process.env.ACCESS_TOKEN_NAME, accessToken, {
         httpOnly: true,
-        maxAge: 20 * 60 * 1000, // 20m
+        maxAge: 60 * 60 * 1000, // 60m
       });
 
       res.cookie(process.env.REFRESH_TOKEN_NAME, refreshToken, {
@@ -217,7 +217,7 @@ export class AuthService {
 
       res.cookie(process.env.ACCESS_TOKEN_NAME, accessToken, {
         httpOnly: true,
-        maxAge: 20 * 60 * 1000, // 20m
+        maxAge: 60 * 60 * 1000, // 60m
       });
       res.cookie(process.env.REFRESH_TOKEN_NAME, refreshToken, {
         httpOnly: true,

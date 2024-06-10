@@ -1,0 +1,37 @@
+# Node modules and package lock file
+node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+# Logs
+logs
+*.log
+# Temporary directories and files
+temp
+tmp
+*.tmp
+*.swp
+# Build outputs
+dist
+build
+# Docker-related files
+Dockerfile
+.dockerignore
+# Environment files
+.env
+.env.*
+# Local configuration files
+.vscode
+.idea
+*.local
+# Git and other version control related files
+.git
+.gitignore
+# IDEs and editors specific files
+*.iml
+*.sublime-project
+*.sublime-workspace
+*.vscode
+# OS generated files
+.DS_Store
+Thumbs.db
